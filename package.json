@@ -5,6 +5,7 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@dqbd/tiktoken": "^1.0.6",
     "@nrwl/cli": "^15.9.2",
     "@types/express": "~4.17.13",
     "axios": "^1.0.0",
