@@ -1,7 +1,7 @@
 import { LLMChain } from 'langchain';
 import { OpenAI } from 'langchain/llms';
-import { promptTemplate } from './util-functions/prompts';
 import { loadSummarizationChain } from 'langchain/chains';
+import { GPT4All } from 'gpt4all';
 
 export function initiateLLM() {
   return new OpenAI({
@@ -26,7 +26,6 @@ export async function createLlmChain(llm, prompt) {
 
 export async function summarizeContent(model, docs) {
   const chain = loadSummarizationChain(model);
-
   const res = await chain.call({
     input_documents: docs,
   });
@@ -34,4 +33,22 @@ export async function summarizeContent(model, docs) {
   console.log(res);
 
   return res;
+}
+
+export async function initiateGpt4All() {
+  console.log('initialise gpt');
+  try {
+    const gpt4All = new GPT4All('gpt4all-lora-unfiltered-quantized', true);
+    await gpt4All.init();
+
+    await gpt4All.open();
+
+    return gpt4All;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+export function closeGpt4All(gpt4All: GPT4All) {
+  gpt4All.close();
 }

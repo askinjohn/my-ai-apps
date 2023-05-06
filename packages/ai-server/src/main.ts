@@ -2,6 +2,7 @@ import express from 'express';
 import { getResponseForYourBiblicalQuestion } from './sources/biblical';
 import bodyParser from 'body-parser';
 import { getSummarization } from './sources/summarization';
+import { getResponseFromGpt4All } from './sources/gpt4All';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -33,4 +34,10 @@ app.post('/summarize', async (req, res) => {
 
 app.listen(port, host, () => {
   console.log(`[ ready ] http://${host}:${port}`);
+});
+
+app.post('/gpt4all', async (req, res) => {
+  console.log('Request received for gpt4All');
+  const response = await getResponseFromGpt4All(req.body.data);
+  res.send(response);
 });
