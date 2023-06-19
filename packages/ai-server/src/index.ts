@@ -2,6 +2,15 @@ import { LLMChain } from 'langchain';
 import { OpenAI } from 'langchain/llms';
 import { loadSummarizationChain } from 'langchain/chains';
 import { GPT4All } from 'gpt4all';
+import { Configuration, OpenAIApi } from 'openai';
+
+export function initiateOpenAI() {
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+  return openai;
+}
 
 export function initiateLLM() {
   return new OpenAI({
@@ -40,9 +49,7 @@ export async function initiateGpt4All() {
   try {
     const gpt4All = new GPT4All('gpt4all-lora-unfiltered-quantized', true);
     await gpt4All.init();
-
     await gpt4All.open();
-
     return gpt4All;
   } catch (e) {
     console.log(e.message);

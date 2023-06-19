@@ -3,6 +3,7 @@ import { getResponseForYourBiblicalQuestion } from './sources/biblical';
 import bodyParser from 'body-parser';
 import { getSummarization } from './sources/summarization';
 import { getResponseFromGpt4All } from './sources/gpt4All';
+import { transcribeAudio } from './sources/transcription';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -22,6 +23,15 @@ app.post('/bible', async (req, res) => {
     status: 'SUCCESS',
     message: answers,
   });
+});
+
+app.post('/transcribe', async (req, res) => {
+  console.log('Request received for transcribing', JSON.stringify(req.body));
+
+  const resFromTranscription = await transcribeAudio();
+
+  console.log(resFromTranscription);
+  return res.send(resFromTranscription.data);
 });
 
 app.post('/summarize', async (req, res) => {
