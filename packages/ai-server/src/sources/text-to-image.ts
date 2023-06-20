@@ -3,9 +3,8 @@ import axios from 'axios';
 const stabilityAPI = 'https://api.stability.ai';
 
 export async function textToImage(engineId, prompts) {
-  console.log(prompts, engineId);
   const data = { text_prompts: prompts };
-  console.log(data);
+
   try {
     return await axios.post(
       `${stabilityAPI}/v1/generation/${engineId}/text-to-image`,
