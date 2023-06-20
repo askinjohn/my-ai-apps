@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import { getSummarization } from './sources/summarization';
 import { getResponseFromGpt4All } from './sources/gpt4All';
 import { transcribeAudio } from './sources/transcription';
+import { getSDEngines, textToImage } from './sources/text-to-image';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -23,6 +24,27 @@ app.post('/bible', async (req, res) => {
     status: 'SUCCESS',
     message: answers,
   });
+});
+
+app.get('/stableDiffusion/engines', async (req, res) => {
+  console.log('Request received for getting list of engines');
+  const engines = await getSDEngines();
+  return res.send(engines.data);
+});
+
+app.post('/text-to-image', async (req, res) => {
+  if (!req.body.text) {
+    res.send({
+      status: 'ERROR',
+      message: 'Text prompts are necessary',
+    });
+  }
+  const imageRes = await textToImage(
+    req.body.engine_id ?? 'stable-diffusion-v1-5',
+    req.body.text
+  );
+  console.log(imageRes.data);
+  return res.send(imageRes.data);
 });
 
 app.post('/transcribe', async (req, res) => {
